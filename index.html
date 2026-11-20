@@ -1,0 +1,661 @@
+{\rtf1\ansi\ansicpg936\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 import React, \{ useState, useEffect \} from 'react';\
+\
+// ==========================================\
+// DATA\
+// ==========================================\
+\
+const VOCAB_DATA = [\
+  \{ ch: "\uc0\u30528 ", py: "zhe", uz: "holatni ifodalovchi ko'makchi", ru: "\u1074 \u1089 \u1087 \u1086 \u1084 \u1086 \u1075 \u1072 \u1090 \u1077 \u1083 \u1100 \u1085 \u1086 \u1077  \u1089 \u1083 \u1086 \u1074 \u1086  \u1089 \u1086 \u1089 \u1090 \u1086 \u1103 \u1085 \u1080 \u1103 ", en: "auxiliary word for ongoing state" \},\
+  \{ ch: "\uc0\u25163 ", py: "sh\u466 u", uz: "qo'l", ru: "\u1088 \u1091 \u1082 \u1072 ", en: "hand" \},\
+  \{ ch: "\uc0\u25343 ", py: "n\'e1", uz: "ushlab turmoq, olmoq", ru: "\u1076 \u1077 \u1088 \u1078 \u1072 \u1090 \u1100 , \u1073 \u1088 \u1072 \u1090 \u1100 ", en: "hold, take" \},\
+  \{ ch: "\uc0\u38085 \u31508 ", py: "qi\u257 nb\u464 ", uz: "qalam", ru: "\u1082 \u1072 \u1088 \u1072 \u1085 \u1076 \u1072 \u1096 ", en: "pencil" \},\
+  \{ ch: "\uc0\u29677 ", py: "b\u257 n", uz: "guruh", ru: "\u1075 \u1088 \u1091 \u1087 \u1087 \u1072 , \u1082 \u1083 \u1072 \u1089 \u1089 ", en: "class, group" \},\
+  \{ ch: "\uc0\u38271 ", py: "zh\u462 ng", uz: "o'smoq, ulg'aymoq", ru: "\u1088 \u1072 \u1089 \u1090 \u1080 , \u1074 \u1099 \u1075 \u1083 \u1103 \u1076 \u1077 \u1090 \u1100 ", en: "grow, develop" \},\
+  \{ ch: "\uc0\u31505 ", py: "xi\'e0o", uz: "kulmoq", ru: "\u1089 \u1084 \u1077 \u1103 \u1090 \u1100 \u1089 \u1103 ", en: "laugh, smile" \},\
+  \{ ch: "\uc0\u23486 \u39302 ", py: "b\u299 ngu\u462 n", uz: "mehmonxona", ru: "\u1075 \u1086 \u1089 \u1090 \u1080 \u1085 \u1080 \u1094 \u1072 ", en: "hotel" \},\
+  \{ ch: "\uc0\u19968 \u30452 ", py: "y\'eczh\'ed", uz: "to'g'riga (yurmoq)", ru: "\u1087 \u1088 \u1103 \u1084 \u1086 , \u1087 \u1086 \u1089 \u1090 \u1086 \u1103 \u1085 \u1085 \u1086 ", en: "straight, continuously" \},\
+  \{ ch: "\uc0\u24448 ", py: "w\u462 ng", uz: "-ga (tomon)", ru: "\u1074  \u1085 \u1072 \u1087 \u1088 \u1072 \u1074 \u1083 \u1077 \u1085 \u1080 \u1080 , \u1082 ", en: "towards, to" \},\
+  \{ ch: "\uc0\u36335 \u21475 ", py: "l\'f9k\u466 u", uz: "chorraha", ru: "\u1087 \u1077 \u1088 \u1077 \u1082 \u1088 \u1077 \u1089 \u1090 \u1086 \u1082 ", en: "intersection" \}\
+];\
+\
+const DIALOGUES_DATA = [\
+  \{\
+    title: "\uc0\u22312 \u21150 \u20844 \u23460  / Ofisda",\
+    lines: [\
+      \{ speaker: "A", ch: "\uc0\u38376 \u24320 \u30528 \u21602 \u65292 \u35831 \u36827 \u12290 ", uz: "Eshik ochiq, marhamat, kiring.", ru: "\u1044 \u1074 \u1077 \u1088 \u1100  \u1086 \u1090 \u1082 \u1088 \u1099 \u1090 \u1072 , \u1087 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1074 \u1093 \u1086 \u1076 \u1080 \u1090 \u1077 .", en: "The door is open, please come in." \},\
+      \{ speaker: "B", ch: "\uc0\u35831 \u38382 \u65292 \u24352 \u20808 \u29983 \u22312 \u21527 \u65311 ", uz: "Aytolmaysizmi, janob Jang shu yerdami?", ru: "\u1057 \u1082 \u1072 \u1078 \u1080 \u1090 \u1077 , \u1087 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1075 \u1086 \u1089 \u1087 \u1086 \u1076 \u1080 \u1085  \u1063 \u1078 \u1072 \u1085  \u1079 \u1076 \u1077 \u1089 \u1100 ?", en: "Excuse me, is Mr. Zhang here?" \},\
+      \{ speaker: "A", ch: "\uc0\u20182 \u20986 \u21435 \u20102 \u12290 \u20320 \u19979 \u21320 \u20877 \u26469 \u21543 \u12290 ", uz: "U chiqib ketgan, tushdan keyin yana kela qoling.", ru: "\u1054 \u1085  \u1074 \u1099 \u1096 \u1077 \u1083 . \u1055 \u1088 \u1080 \u1093 \u1086 \u1076 \u1080 \u1090 \u1077  \u1074 \u1086  \u1074 \u1090 \u1086 \u1088 \u1086 \u1081  \u1087 \u1086 \u1083 \u1086 \u1074 \u1080 \u1085 \u1077  \u1076 \u1085 \u1103 .", en: "He went out. Please come again in the afternoon." \},\
+      \{ speaker: "B", ch: "\uc0\u22909 \u30340 \u65292 \u35874 \u35874 \u65281 ", uz: "Mayli, rahmat!", ru: "\u1061 \u1086 \u1088 \u1086 \u1096 \u1086 , \u1089 \u1087 \u1072 \u1089 \u1080 \u1073 \u1086 !", en: "OK, thank you!" \}\
+    ]\
+  \},\
+  \{\
+    title: "\uc0\u22312 \u21150 \u20844 \u23460  / Ofisda",\
+    lines: [\
+      \{ speaker: "A", ch: "\uc0\u37027 \u20010 \u27491 \u22312 \u35828 \u35805 \u30340 \u22899 \u23401 \u20799 \u26159 \u35841 \u65311 ", uz: "Anavi gapirayotgan qiz kim?", ru: "\u1050 \u1090 \u1086  \u1090 \u1072  \u1088 \u1072 \u1079 \u1075 \u1086 \u1074 \u1072 \u1088 \u1080 \u1074 \u1072 \u1102 \u1097 \u1072 \u1103  \u1076 \u1077 \u1074 \u1091 \u1096 \u1082 \u1072 ?", en: "Who is that girl talking?" \},\
+      \{ speaker: "B", ch: "\uc0\u25105 \u30693 \u36947 \u22905 \u30340 \u21517 \u23383 \u65292 \u22905 \u22995 \u26472 \u65292 \u21483 \u26472 \u31505 \u31505 \u65292 \u22905 \u22992 \u22992 \u26159 \u25105 \u21516 \u23398 \u12290 ", uz: "Uning ismini bilaman, familiyasi Yang, ismi Yang Siyaosiyao, uning opasi mening kursdoshim.", ru: "\u1071  \u1079 \u1085 \u1072 \u1102  \u1077 \u1077  \u1080 \u1084 \u1103 , \u1077 \u1077  \u1092 \u1072 \u1084 \u1080 \u1083 \u1080 \u1103  \u1071 \u1085 , \u1079 \u1086 \u1074 \u1091 \u1090  \u1071 \u1085  \u1057 \u1103 \u1086 \u1089 \u1103 \u1086 , \u1077 \u1077  \u1089 \u1090 \u1072 \u1088 \u1096 \u1072 \u1103  \u1089 \u1077 \u1089 \u1090 \u1088 \u1072  - \u1084 \u1086 \u1103  \u1086 \u1076 \u1085 \u1086 \u1082 \u1091 \u1088 \u1089 \u1085 \u1080 \u1094 \u1072 .", en: "I know her name, her surname is Yang, she is called Yang Xiaoxiao, her older sister is my classmate." \},\
+      \{ speaker: "A", ch: "\uc0\u37027 \u20010 \u25163 \u37324 \u25343 \u30528 \u38085 \u31508 \u30340 \u21602 \u65311 ", uz: "Anavi qo'lida qalam ushlab turgan-chi?", ru: "\u1040  \u1090 \u1072 , \u1095 \u1090 \u1086  \u1076 \u1077 \u1088 \u1078 \u1080 \u1090  \u1082 \u1072 \u1088 \u1072 \u1085 \u1076 \u1072 \u1096  \u1074  \u1088 \u1091 \u1082 \u1077 ?", en: "What about the one holding a pencil in her hand?" \},\
+      \{ speaker: "B", ch: "\uc0\u25105 \u19981 \u35748 \u35782 \u12290 ", uz: "Uni tanimayman.", ru: "\u1071  \u1077 \u1077  \u1085 \u1077  \u1079 \u1085 \u1072 \u1102 .", en: "I don't know her." \}\
+    ]\
+  \},\
+  \{\
+    title: "\uc0\u22312 \u36816 \u21160 \u22330  / Sport maydonida",\
+    lines: [\
+      \{ speaker: "A", ch: "\uc0\u21548 \u35828 \u20320 \u26377 \u22899 \u26379 \u21451 \u20102 \u65311 \u25105 \u35748 \u35782 \u22905 \u21527 \u65311 ", uz: "Eshitishimcha, qiz o'rtoq topibsan? Men uni taniymanmi?", ru: "\u1071  \u1089 \u1083 \u1099 \u1096 \u1072 \u1083 , \u1091  \u1090 \u1077 \u1073 \u1103  \u1087 \u1086 \u1103 \u1074 \u1080 \u1083 \u1072 \u1089 \u1100  \u1076 \u1077 \u1074 \u1091 \u1096 \u1082 \u1072 ? \u1071  \u1077 \u1077  \u1079 \u1085 \u1072 \u1102 ?", en: "I heard you have a girlfriend? Do I know her?" \},\
+      \{ speaker: "B", ch: "\uc0\u23601 \u26159 \u25105 \u20204 \u29677 \u37027 \u20010 \u38271 \u30528 \u20004 \u20010 \u22823 \u30524 \u30555 \u65292 \u38750 \u24120 \u29233 \u31505 \u30340 \u22899 \u23401 \u20799 \u12290 ", uz: "Bizning guruhdagi ko'zlari katta, kulishni juda yaxshi ko'radigan qiz.", ru: "\u1069 \u1090 \u1086  \u1090 \u1072  \u1076 \u1077 \u1074 \u1091 \u1096 \u1082 \u1072  \u1080 \u1079  \u1085 \u1072 \u1096 \u1077 \u1081  \u1075 \u1088 \u1091 \u1087 \u1087 \u1099  \u1089  \u1073 \u1086 \u1083 \u1100 \u1096 \u1080 \u1084 \u1080  \u1075 \u1083 \u1072 \u1079 \u1072 \u1084 \u1080 , \u1082 \u1086 \u1090 \u1086 \u1088 \u1072 \u1103  \u1086 \u1095 \u1077 \u1085 \u1100  \u1083 \u1102 \u1073 \u1080 \u1090  \u1089 \u1084 \u1077 \u1103 \u1090 \u1100 \u1089 \u1103 .", en: "It's the girl in our class with big eyes who loves to smile." \},\
+      \{ speaker: "A", ch: "\uc0\u22905 \u19981 \u26159 \u26377 \u30007 \u26379 \u21451 \u21527 \u65311 ", uz: "Uning yigiti bor emasmi?", ru: "\u1056 \u1072 \u1079 \u1074 \u1077  \u1091  \u1085 \u1077 \u1077  \u1085 \u1077 \u1090  \u1087 \u1072 \u1088 \u1085 \u1103 ?", en: "Doesn't she have a boyfriend?" \},\
+      \{ speaker: "B", ch: "\uc0\u37027 \u20010 \u24050 \u32463 \u26159 \u22905 \u30340 \u21069 \u30007 \u21451 \u20102 \u12290 ", uz: "U allaqachon uning sobiq yigitiga aylandi.", ru: "\u1058 \u1086 \u1090  \u1091 \u1078 \u1077  \u1077 \u1077  \u1073 \u1099 \u1074 \u1096 \u1080 \u1081  \u1087 \u1072 \u1088 \u1077 \u1085 \u1100 .", en: "That is already her ex-boyfriend." \}\
+    ]\
+  \},\
+  \{\
+    title: "\uc0\u22312 \u36335 \u19978  / Yo'lda",\
+    lines: [\
+      \{ speaker: "A", ch: "\uc0\u35831 \u38382 \u65292 \u36825 \u20799 \u31163 \u26032 \u20140 \u23486 \u39302 \u36828 \u21527 \u65311 ", uz: "Aytolmaysizmi, bu yerdan Sinjing mehmonxonasigacha uzoqmi?", ru: "\u1057 \u1082 \u1072 \u1078 \u1080 \u1090 \u1077 , \u1087 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1086 \u1090 \u1089 \u1102 \u1076 \u1072  \u1076 \u1072 \u1083 \u1077 \u1082 \u1086  \u1076 \u1086  \u1075 \u1086 \u1089 \u1090 \u1080 \u1085 \u1080 \u1094 \u1099  \u1057 \u1080 \u1085 \u1100 \u1094 \u1079 \u1080 \u1085 ?", en: "Excuse me, is it far from here to Xinjing Hotel?" \},\
+      \{ speaker: "B", ch: "\uc0\u19981 \u36828 \u65292 \u36208 \u36335 \u20108 \u21313 \u20998 \u38047 \u23601 \u21040 \u12290 ", uz: "Uzoq emas, yigirma daqiqa yursangiz yetib olasiz.", ru: "\u1053 \u1077 \u1076 \u1072 \u1083 \u1077 \u1082 \u1086 , 20 \u1084 \u1080 \u1085 \u1091 \u1090  \u1087 \u1077 \u1096 \u1082 \u1086 \u1084 .", en: "Not far, a 20-minute walk." \},\
+      \{ speaker: "A", ch: "\uc0\u20320 \u33021 \u21578 \u35785 \u25105 \u24590 \u20040 \u36208 \u21527 \u65311 ", uz: "Qaysi tomonga yurishimni ayta olasizmi?", ru: "\u1042 \u1099  \u1084 \u1086 \u1078 \u1077 \u1090 \u1077  \u1089 \u1082 \u1072 \u1079 \u1072 \u1090 \u1100  \u1084 \u1085 \u1077 , \u1082 \u1072 \u1082  \u1087 \u1088 \u1086 \u1081 \u1090 \u1080 ?", en: "Can you tell me how to go?" \},\
+      \{ speaker: "B", ch: "\uc0\u20174 \u36825 \u20799 \u19968 \u30452 \u24448 \u21069 \u36208 \u65292 \u21040 \u20102 \u21069 \u38754 \u30340 \u36335 \u21475 \u20877 \u24448 \u21491 \u36208 \u12290 ", uz: "Shu yerdan to'g'riga yurasiz, chorrahaga yetgach, yana o'ngga burilasiz.", ru: "\u1054 \u1090 \u1089 \u1102 \u1076 \u1072  \u1080 \u1076 \u1080 \u1090 \u1077  \u1087 \u1088 \u1103 \u1084 \u1086 , \u1085 \u1072  \u1087 \u1077 \u1088 \u1077 \u1082 \u1088 \u1077 \u1089 \u1090 \u1082 \u1077  \u1074 \u1087 \u1077 \u1088 \u1077 \u1076 \u1080  \u1087 \u1086 \u1074 \u1077 \u1088 \u1085 \u1080 \u1090 \u1077  \u1085 \u1072 \u1087 \u1088 \u1072 \u1074 \u1086 .", en: "Walk straight ahead from here, and at the intersection ahead, turn right." \}\
+    ]\
+  \}\
+];\
+\
+const GRAMMAR_DATA = [\
+  \{\
+    ch: "1. \uc0\u32467 \u26500 \u21161 \u35789 \'93\u30528 \'94",\
+    descUz: "\\"\uc0\u30528 \\" holatni ifodalovchi ko'makchi fe'lga qo'shilib, harakat holati davomiyligini bildiradi.",\
+    descRu: "\uc0\u1057 \u1090 \u1088 \u1091 \u1082 \u1090 \u1091 \u1088 \u1085 \u1072 \u1103  \u1095 \u1072 \u1089 \u1090 \u1080 \u1094 \u1072  \'ab\u30528 \'bb \u1076 \u1086 \u1073 \u1072 \u1074 \u1083 \u1103 \u1077 \u1090 \u1089 \u1103  \u1082  \u1075 \u1083 \u1072 \u1075 \u1086 \u1083 \u1091  \u1076 \u1083 \u1103  \u1086 \u1073 \u1086 \u1079 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1103  \u1087 \u1088 \u1086 \u1076 \u1086 \u1083 \u1078 \u1080 \u1090 \u1077 \u1083 \u1100 \u1085 \u1086 \u1089 \u1090 \u1080  \u1089 \u1086 \u1089 \u1090 \u1086 \u1103 \u1085 \u1080 \u1103 .",\
+    descEn: "The structural particle \\"\uc0\u30528 \\" is added to a verb to indicate the continuation of a state.",\
+    examples: ["\uc0\u38376 \u24320 \u30528 \u12290  (M\'e9n k\u257 i zhe.)", "\u22905 \u31359 \u30528 \u32418 \u33394 \u30340 \u34915 \u26381 \u12290  (T\u257  chu\u257 nzhe h\'f3ngs\'e8 de y\u299 fu.)", "\u38376 \u27809 \u24320 \u30528 \u12290  (M\'e9n m\'e9i k\u257 i zhe.)"]\
+  \},\
+  \{\
+    ch: "2. \uc0\u21453 \u38382 \u21477 \'93\u19981 \u26159 \'85\'85\u21527 \'94",\
+    descUz: "\\"\uc0\u19981 \u26159 \'85\'85\u21527 \\" ritorik so'roq gap odatda eslatish, gapiruvchini anglamaganda yoki noroziligini ifodalaganda ishlatiladi.",\
+    descRu: "\uc0\u1056 \u1080 \u1090 \u1086 \u1088 \u1080 \u1095 \u1077 \u1089 \u1082 \u1080 \u1081  \u1074 \u1086 \u1087 \u1088 \u1086 \u1089  \'ab\u19981 \u26159 \'85\'85\u21527 \'bb \u1086 \u1073 \u1099 \u1095 \u1085 \u1086  \u1080 \u1089 \u1087 \u1086 \u1083 \u1100 \u1079 \u1091 \u1077 \u1090 \u1089 \u1103  \u1076 \u1083 \u1103  \u1085 \u1072 \u1087 \u1086 \u1084 \u1080 \u1085 \u1072 \u1085 \u1080 \u1103  \u1080 \u1083 \u1080  \u1074 \u1099 \u1088 \u1072 \u1078 \u1077 \u1085 \u1080 \u1103  \u1085 \u1077 \u1087 \u1086 \u1085 \u1080 \u1084 \u1072 \u1085 \u1080 \u1103 /\u1085 \u1077 \u1076 \u1086 \u1074 \u1086 \u1083 \u1100 \u1089 \u1090 \u1074 \u1072  \u1075 \u1086 \u1074 \u1086 \u1088 \u1103 \u1097 \u1077 \u1075 \u1086 .",\
+    descEn: "The rhetorical question \\"\uc0\u19981 \u26159 \'85\'85\u21527 \\" is often used to remind someone or express the speaker's confusion or dissatisfaction.",\
+    examples: ["\uc0\u19981 \u26159 \u35828 \u20170 \u22825 \u26377 \u38632 \u21527 \u65311 \u24590 \u20040 \u27809 \u19979 \u65311  (B\'fa sh\'ec shu\u333  j\u299 nti\u257 n y\u466 u y\u468  ma? Z\u283 nme m\'e9i xi\'e0?)", "\u20320 \u19981 \u26159 \u21271 \u20140 \u20154 \u21527 \u65311  (N\u464  b\'fa sh\'ec B\u283 ij\u299 ng r\'e9n ma?)"]\
+  \},\
+  \{\
+    ch: "3. \uc0\u20171 \u35789 \'93\u24448 \'94",\
+    descUz: "\\"\uc0\u24448 \\" old ko'makchisi yo'nalishni ifodalashda qo'llaniladi.",\
+    descRu: "\uc0\u1055 \u1088 \u1077 \u1076 \u1083 \u1086 \u1075  \'ab\u24448 \'bb \u1086 \u1073 \u1099 \u1095 \u1085 \u1086  \u1080 \u1089 \u1087 \u1086 \u1083 \u1100 \u1079 \u1091 \u1077 \u1090 \u1089 \u1103  \u1076 \u1083 \u1103  \u1091 \u1082 \u1072 \u1079 \u1072 \u1085 \u1080 \u1103  \u1085 \u1072 \u1087 \u1088 \u1072 \u1074 \u1083 \u1077 \u1085 \u1080 \u1103 .",\
+    descEn: "The preposition \\"\uc0\u24448 \\" is often used to indicate direction.",\
+    examples: ["\uc0\u20174 \u36825 \u20799 \u24448 \u21069 \u36208 \u12290  (C\'f3ng zh\'e8r w\u462 ng qi\'e1n z\u466 u.)", "\u24448 \u24038 \u36208 \u26159 \u21307 \u38498 \u12290  (W\u462 ng zu\u466  z\u466 u sh\'ec y\u299 yu\'e0n.)"]\
+  \}\
+];\
+\
+const GRAMMAR_QUIZ_DATA = [\
+  \{ q: "\uc0\u37027 \u20010 \u25163 \u37324 \u25343 (___)\u38085 \u31508 \u30340 \u22899 \u23401 \u20799 \u26159 \u35841 \u65311 ", opts: ["\u30528 ", "\u20102 ", "\u36807 ", "\u30340 "], ans: "\u30528 " \},\
+  \{ q: "\uc0\u38376 \u27809 \u24320 (___)\u12290 ", opts: ["\u22312 ", "\u30528 ", "\u27491 ", "\u24448 "], ans: "\u30528 " \},\
+  \{ q: "\uc0\u20182 \u31359 (___)\u32418 \u33394 \u30340 \u34915 \u26381 \u12290 ", opts: ["\u30528 ", "\u36807 ", "\u20102 ", "\u30340 "], ans: "\u30528 " \},\
+  \{ q: "\uc0\u20174 \u36825 \u20799 \u19968 \u30452 (___)\u21069 \u36208 \u12290 ", opts: ["\u24448 ", "\u30528 ", "\u21435 ", "\u21040 "], ans: "\u24448 " \},\
+  \{ q: "(___)\uc0\u24038 \u36208 \u26159 \u21307 \u38498 \u12290 ", opts: ["\u30528 ", "\u24448 ", "\u22312 ", "\u20174 "], ans: "\u24448 " \},\
+  \{ q: "\uc0\u20320 (___)\u35828 \u20170 \u22825 \u26377 \u38632 \u21527 \u65311 \u24590 \u20040 \u27809 \u19979 \u65311 ", opts: ["\u19981 ", "\u19981 \u26159 ", "\u27809 ", "\u27809 \u26377 "], ans: "\u19981 \u26159 " \},\
+  \{ q: "\uc0\u22905 (___)\u26377 \u30007 \u26379 \u21451 \u20102 \u21527 \u65311 ", opts: ["\u19981 \u26159 ", "\u19981 ", "\u27809 ", "\u27809 \u26377 "], ans: "\u19981 \u26159 " \},\
+  \{ q: "\uc0\u21040 \u20102 \u21069 \u38754 \u30340 \u36335 \u21475 \u20877 (___)\u21491 \u36208 \u12290 ", opts: ["\u21521 ", "\u21040 ", "\u24448 ", "\u21435 "], ans: "\u24448 " \},\
+  \{ q: "\uc0\u25105 \u20204 \u29677 \u37027 \u20010 \u38271 (___)\u20004 \u20010 \u22823 \u30524 \u30555 \u30340 \u22899 \u23401 \u20799 \u12290 ", opts: ["\u20102 ", "\u36807 ", "\u30528 ", "\u24471 "], ans: "\u30528 " \},\
+  \{ q: "\uc0\u30005 \u35270 \u24320 (___)\u21602 \u12290 ", opts: ["\u20102 ", "\u30528 ", "\u36807 ", "\u30340 "], ans: "\u30528 " \},\
+  \{ q: "\uc0\u20182 (___)\u21271 \u20140 \u20154 \u21527 \u65311 \u24590 \u20040 \u19981 \u20250 \u35828 \u21271 \u20140 \u35805 \u65311 ", opts: ["\u26159 \u19981 ", "\u19981 \u26159 ", "\u26377 \u27809 \u26377 ", "\u27809 "], ans: "\u19981 \u26159 " \},\
+  \{ q: "\uc0\u37027 \u20010 \u27491 \u22352 (___)\u30475 \u20070 \u30340 \u20154 \u26159 \u35841 \u65311 ", opts: ["\u20102 ", "\u36807 ", "\u30340 ", "\u30528 "], ans: "\u30528 " \},\
+  \{ q: "\uc0\u32769 \u24072 \u22312 \u21069 \u38754 \u31449 (___)\u12290 ", opts: ["\u20102 ", "\u30528 ", "\u36807 ", "\u24448 "], ans: "\u30528 " \},\
+  \{ q: "\uc0\u35831 (___)\u37324 \u36208 \u12290 ", opts: ["\u30528 ", "\u30340 ", "\u24448 ", "\u20102 "], ans: "\u24448 " \},\
+  \{ q: "\uc0\u22806 \u38754 \u19979 (___)\u38632 \u21602 \u12290 ", opts: ["\u24448 ", "\u36807 ", "\u30528 ", "\u19981 \u26159 "], ans: "\u30528 " \}\
+];\
+\
+const EXERCISES_DATA = [\
+  \{ verb: "\uc0\u23398 ", options: ["\u36710 ", "\u38899 \u20048 ", "\u27721 \u35821 ", "\u38632 "], ans: "\u27721 \u35821 " \},\
+  \{ verb: "\uc0\u19979 ", options: ["\u38085 \u31508 ", "\u38632 ", "\u26379 \u21451 ", "\u31036 \u29289 "], ans: "\u38632 " \},\
+  \{ verb: "\uc0\u19978 ", options: ["\u36710 ", "\u31036 \u29289 ", "\u38899 \u20048 ", "\u38632 "], ans: "\u36710 " \},\
+  \{ verb: "\uc0\u22352 ", options: ["\u26379 \u21451 ", "\u39134 \u26426 ", "\u27721 \u35821 ", "\u38085 \u31508 "], ans: "\u39134 \u26426 " \},\
+  \{ verb: "\uc0\u36865 ", options: ["\u31036 \u29289 ", "\u38632 ", "\u38899 \u20048 ", "\u36710 "], ans: "\u31036 \u29289 " \},\
+  \{ verb: "\uc0\u21548 ", options: ["\u27721 \u35821 ", "\u39134 \u26426 ", "\u38899 \u20048 ", "\u31036 \u29289 "], ans: "\u38899 \u20048 " \},\
+  \{ verb: "\uc0\u25343 ", options: ["\u38085 \u31508 ", "\u39134 \u26426 ", "\u26379 \u21451 ", "\u38632 "], ans: "\u38085 \u31508 " \}\
+];\
+\
+// ==========================================\
+// UTILITY COMPONENTS & ICONS\
+// ==========================================\
+\
+const AudioIcon = () => (\
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">\
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>\
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>\
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>\
+  </svg>\
+);\
+\
+const playAudio = (text) => \{\
+  if ('speechSynthesis' in window) \{\
+    const utterance = new SpeechSynthesisUtterance(text);\
+    utterance.lang = 'zh-CN';\
+    utterance.rate = 0.85;\
+    window.speechSynthesis.speak(utterance);\
+  \}\
+\};\
+\
+// ==========================================\
+// MAIN APP COMPONENT\
+// ==========================================\
+\
+export default function App() \{\
+  const [currentTab, setCurrentTab] = useState('flashcards');\
+\
+  const TABS = [\
+    \{ id: 'flashcards', label: "Lug'at" \},\
+    \{ id: 'vocab-quiz', label: "Lug'at Testi" \},\
+    \{ id: 'dialogues', label: "Dialoglar" \},\
+    \{ id: 'grammar', label: "Grammatika" \},\
+    \{ id: 'grammar-quiz', label: "Grammatika Testi" \},\
+    \{ id: 'exercises', label: "Mashqlar" \}\
+  ];\
+\
+  return (\
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200">\
+      \
+      \{/* Header */\}\
+      <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg">\
+        <div className="max-w-4xl mx-auto px-4 py-8">\
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-2 text-center tracking-tight">13 \uc0\u38376 \u24320 \u30528 \u21602 </h1>\
+          <h2 className="text-lg md:text-xl font-medium text-blue-100 text-center">Dilfuza K\uc0\u257 ng l\u462 o sh\u299  bilan xitoy tilini o'rganmiz</h2>\
+        </div>\
+      </header>\
+\
+      \{/* Navigation Tabs */\}\
+      <nav className="bg-white border-b sticky top-0 z-10 shadow-sm">\
+        <div className="max-w-4xl mx-auto px-2">\
+          <div className="flex overflow-x-auto hide-scrollbar whitespace-nowrap">\
+            \{TABS.map(tab => (\
+              <button\
+                key=\{tab.id\}\
+                onClick=\{() => setCurrentTab(tab.id)\}\
+                className=\{`px-4 py-4 text-sm md:text-base font-semibold border-b-4 transition-colors duration-200 \
+                  $\{currentTab === tab.id ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50'\}`\}\
+              >\
+                \{tab.label\}\
+              </button>\
+            ))\}\
+          </div>\
+        </div>\
+      </nav>\
+\
+      \{/* Main Content Area */\}\
+      <main className="max-w-4xl mx-auto px-4 py-8 min-h-[60vh]">\
+        \{currentTab === 'flashcards' && <Flashcards />\}\
+        \{currentTab === 'vocab-quiz' && <VocabQuiz />\}\
+        \{currentTab === 'dialogues' && <Dialogues />\}\
+        \{currentTab === 'grammar' && <Grammar />\}\
+        \{currentTab === 'grammar-quiz' && <GrammarQuiz />\}\
+        \{currentTab === 'exercises' && <Exercises />\}\
+      </main>\
+\
+      \{/* Footer */\}\
+      <footer className="bg-slate-800 text-slate-400 py-6 text-center text-sm mt-8">\
+        <p>HSK 2 Standard Course - Lesson 13</p>\
+        <p className="mt-1">\'a9 2026 Dilfuza K\uc0\u257 ng l\u462 o sh\u299  (telegram@diffila)</p>\
+      </footer>\
+\
+      \{/* CSS for hiding scrollbar in tabs */\}\
+      <style dangerouslySetInnerHTML=\{\{__html: `\
+        .hide-scrollbar::-webkit-scrollbar \{ display: none; \}\
+        .hide-scrollbar \{ -ms-overflow-style: none; scrollbar-width: none; \}\
+      `\}\} />\
+    </div>\
+  );\
+\}\
+\
+// ==========================================\
+// FEATURE COMPONENTS\
+// ==========================================\
+\
+function Flashcards() \{\
+  const [currentIndex, setCurrentIndex] = useState(0);\
+  const [isFlipped, setIsFlipped] = useState(false);\
+\
+  const word = VOCAB_DATA[currentIndex];\
+\
+  const handleNext = () => \{\
+    setIsFlipped(false);\
+    setTimeout(() => \{\
+      setCurrentIndex((prev) => (prev + 1) % VOCAB_DATA.length);\
+    \}, 150);\
+  \};\
+\
+  const handlePrev = () => \{\
+    setIsFlipped(false);\
+    setTimeout(() => \{\
+      setCurrentIndex((prev) => (prev - 1 + VOCAB_DATA.length) % VOCAB_DATA.length);\
+    \}, 150);\
+  \};\
+\
+  return (\
+    <div className="flex flex-col items-center max-w-lg mx-auto">\
+      <div className="w-full text-center mb-4 text-slate-500 font-medium">\
+        Kartochka \{currentIndex + 1\} / \{VOCAB_DATA.length\}\
+      </div>\
+\
+      <div \
+        className="relative w-full h-80 bg-transparent cursor-pointer perspective-1000 group"\
+        onClick=\{() => setIsFlipped(!isFlipped)\}\
+        style=\{\{ perspective: '1000px' \}\}\
+      >\
+        <div \
+          className="absolute w-full h-full shadow-xl rounded-2xl transition-all duration-500 transform-style-3d text-center flex flex-col justify-center items-center"\
+          style=\{\{ \
+            transformStyle: 'preserve-3d', \
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' \
+          \}\}\
+        >\
+          \{/* Front */\}\
+          <div className="absolute w-full h-full bg-white rounded-2xl flex flex-col justify-center items-center backface-hidden p-6 border border-slate-100" style=\{\{ backfaceVisibility: 'hidden' \}\}>\
+             <button \
+                onClick=\{(e) => \{ e.stopPropagation(); playAudio(word.ch); \}\} \
+                className="absolute top-4 right-4 text-blue-500 hover:text-blue-700 bg-blue-50 p-3 rounded-full hover:bg-blue-100 transition-colors shadow-sm"\
+                title="Tinglash"\
+             >\
+                <AudioIcon />\
+             </button>\
+             <h2 className="text-8xl font-bold text-slate-800">\{word.ch\}</h2>\
+          </div>\
+\
+          \{/* Back */\}\
+          <div className="absolute w-full h-full bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl flex flex-col justify-center items-center backface-hidden p-8 border border-blue-200" style=\{\{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' \}\}>\
+             <button \
+                onClick=\{(e) => \{ e.stopPropagation(); playAudio(word.ch); \}\} \
+                className="absolute top-4 right-4 text-blue-500 hover:text-blue-700 bg-white p-3 rounded-full hover:bg-blue-50 transition-colors shadow-sm"\
+             >\
+                <AudioIcon />\
+             </button>\
+             <p className="text-3xl font-medium text-slate-700 mb-4">\{word.py\}</p>\
+             <div className="w-full h-px bg-blue-200 mb-4"></div>\
+             <p className="text-xl font-bold text-blue-700 mb-2">\{word.uz\}</p>\
+             <p className="text-lg text-slate-600 mb-2">\{word.ru\}</p>\
+             <p className="text-lg text-slate-600">\{word.en\}</p>\
+          </div>\
+        </div>\
+      </div>\
+\
+      <div className="flex space-x-6 mt-8">\
+        <button onClick=\{handlePrev\} className="px-6 py-3 bg-white text-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-50 transition-colors">\
+           &larr; Oldingi\
+        </button>\
+        <button onClick=\{handleNext\} className="px-6 py-3 bg-blue-600 text-white rounded-xl shadow-md font-semibold hover:bg-blue-700 transition-colors">\
+           Keyingi &rarr;\
+        </button>\
+      </div>\
+    </div>\
+  );\
+\}\
+\
+function VocabQuiz() \{\
+  const [questions, setQuestions] = useState([]);\
+  const [currentQ, setCurrentQ] = useState(0);\
+  const [score, setScore] = useState(0);\
+  const [showResult, setShowResult] = useState(false);\
+  const [selectedOpt, setSelectedOpt] = useState(null);\
+  const [isAnswered, setIsAnswered] = useState(false);\
+\
+  // Generate quiz data\
+  useEffect(() => \{\
+    const shuffledVocab = [...VOCAB_DATA].sort(() => 0.5 - Math.random());\
+    const generatedQuestions = shuffledVocab.map(word => \{\
+      // Get 3 wrong UZ translations\
+      const wrongOpts = VOCAB_DATA.filter(w => w.ch !== word.ch)\
+                                  .sort(() => 0.5 - Math.random())\
+                                  .slice(0, 3)\
+                                  .map(w => w.uz);\
+      const allOpts = [...wrongOpts, word.uz].sort(() => 0.5 - Math.random());\
+      \
+      return \{\
+        prompt: word.ch, // Chinese characters only in prompt\
+        ans: word.uz,    // Options in Uzbek\
+        options: allOpts\
+      \};\
+    \});\
+    setQuestions(generatedQuestions);\
+  \}, []);\
+\
+  const handleSelect = (opt) => \{\
+    if (isAnswered) return;\
+    setSelectedOpt(opt);\
+    setIsAnswered(true);\
+    \
+    if (opt === questions[currentQ].ans) \{\
+      setScore(score + 1);\
+    \}\
+\
+    setTimeout(() => \{\
+      if (currentQ < questions.length - 1) \{\
+        setCurrentQ(currentQ + 1);\
+        setSelectedOpt(null);\
+        setIsAnswered(false);\
+      \} else \{\
+        setShowResult(true);\
+      \}\
+    \}, 1000);\
+  \};\
+\
+  const restart = () => \{\
+    setCurrentQ(0);\
+    setScore(0);\
+    setShowResult(false);\
+    setSelectedOpt(null);\
+    setIsAnswered(false);\
+  \};\
+\
+  if (questions.length === 0) return <div>Loading...</div>;\
+\
+  if (showResult) \{\
+    return (\
+      <div className="max-w-lg mx-auto bg-white p-8 rounded-2xl shadow-lg text-center">\
+        <h3 className="text-3xl font-bold text-slate-800 mb-4">Test Yakunlandi!</h3>\
+        <p className="text-2xl text-blue-600 font-bold mb-8">Natija: \{score\} / \{questions.length\}</p>\
+        <button onClick=\{restart\} className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-blue-700 transition">\
+          Qaytadan boshlash\
+        </button>\
+      </div>\
+    );\
+  \}\
+\
+  const q = questions[currentQ];\
+\
+  return (\
+    <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg">\
+      <div className="flex justify-between items-center mb-6">\
+        <span className="text-sm font-bold text-slate-400">Savol \{currentQ + 1\} / \{questions.length\}</span>\
+        <span className="text-sm font-bold text-blue-500">Ball: \{score\}</span>\
+      </div>\
+      \
+      <div className="text-center mb-8">\
+        <h2 className="text-7xl font-bold text-slate-800 mb-2">\{q.prompt\}</h2>\
+        <p className="text-slate-500 text-sm mt-4">Tarjimasini tanlang:</p>\
+      </div>\
+\
+      <div className="grid grid-cols-1 gap-3">\
+        \{q.options.map((opt, i) => \{\
+          let btnClass = "bg-slate-50 hover:bg-blue-50 text-slate-700 border border-slate-200";\
+          if (isAnswered) \{\
+            if (opt === q.ans) btnClass = "bg-green-100 border-green-400 text-green-800";\
+            else if (opt === selectedOpt) btnClass = "bg-red-100 border-red-400 text-red-800";\
+            else btnClass = "bg-slate-50 opacity-50";\
+          \}\
+\
+          return (\
+            <button \
+              key=\{i\}\
+              onClick=\{() => handleSelect(opt)\}\
+              disabled=\{isAnswered\}\
+              className=\{`p-4 rounded-xl font-medium transition-all text-left text-lg $\{btnClass\}`\}\
+            >\
+              \{opt\}\
+            </button>\
+          );\
+        \})\}\
+      </div>\
+    </div>\
+  );\
+\}\
+\
+function Dialogues() \{\
+  const [expanded, setExpanded] = useState(0); // Track which dialogue is open\
+\
+  return (\
+    <div className="max-w-3xl mx-auto space-y-4">\
+      \{DIALOGUES_DATA.map((dialogue, dIndex) => (\
+        <div key=\{dIndex\} className="bg-white rounded-2xl shadow-md overflow-hidden">\
+          <button \
+            className="w-full text-left px-6 py-4 bg-slate-50 flex justify-between items-center font-bold text-lg text-slate-800 hover:bg-slate-100 transition-colors"\
+            onClick=\{() => setExpanded(expanded === dIndex ? -1 : dIndex)\}\
+          >\
+            <span>\{dialogue.title\}</span>\
+            <span className="text-blue-500 text-2xl">\{expanded === dIndex ? '\uc0\u8722 ' : '+'\}</span>\
+          </button>\
+          \
+          \{expanded === dIndex && (\
+            <div className="p-6 divide-y divide-slate-100">\
+              \{dialogue.lines.map((line, lIndex) => (\
+                <div key=\{lIndex\} className="py-4 first:pt-0 last:pb-0 flex items-start group">\
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center mr-4 mt-1">\
+                    \{line.speaker\}\
+                  </div>\
+                  <div className="flex-grow">\
+                    <div className="flex justify-between items-start">\
+                      <p className="text-xl md:text-2xl font-semibold text-slate-800 mb-2">\{line.ch\}</p>\
+                      <button \
+                        onClick=\{() => playAudio(line.ch)\} \
+                        className="text-slate-400 hover:text-blue-600 p-2 rounded-full hover:bg-slate-50 transition-colors"\
+                        title="Tinglash"\
+                      >\
+                        <AudioIcon />\
+                      </button>\
+                    </div>\
+                    <div className="space-y-1">\
+                      <p className="text-slate-700"><span className="text-xs font-bold text-slate-400 mr-2 uppercase">UZ</span> \{line.uz\}</p>\
+                      <p className="text-slate-600"><span className="text-xs font-bold text-slate-400 mr-2 uppercase">RU</span> \{line.ru\}</p>\
+                      <p className="text-slate-600 italic"><span className="text-xs font-bold text-slate-400 mr-2 uppercase">EN</span> \{line.en\}</p>\
+                    </div>\
+                  </div>\
+                </div>\
+              ))\}\
+            </div>\
+          )\}\
+        </div>\
+      ))\}\
+    </div>\
+  );\
+\}\
+\
+function Grammar() \{\
+  return (\
+    <div className="max-w-3xl mx-auto space-y-6">\
+      \{GRAMMAR_DATA.map((item, idx) => (\
+        <div key=\{idx\} className="bg-white rounded-2xl shadow-md p-6 md:p-8">\
+          <h3 className="text-2xl font-bold text-slate-800 mb-4 border-b border-slate-100 pb-4">\{item.ch\}</h3>\
+          \
+          <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100">\
+             <p className="text-slate-700 leading-relaxed"><span className="font-bold text-slate-500 mr-2 uppercase text-xs">UZ</span>\{item.descUz\}</p>\
+             <p className="text-slate-600 leading-relaxed"><span className="font-bold text-slate-500 mr-2 uppercase text-xs">RU</span>\{item.descRu\}</p>\
+             <p className="text-slate-600 leading-relaxed italic"><span className="font-bold text-slate-500 mr-2 uppercase text-xs">EN</span>\{item.descEn\}</p>\
+          </div>\
+\
+          <div>\
+            <h4 className="font-bold text-slate-400 uppercase text-xs mb-3 tracking-wider">Misollar / \uc0\u1055 \u1088 \u1080 \u1084 \u1077 \u1088 \u1099  / Examples</h4>\
+            <ul className="space-y-2">\
+              \{item.examples.map((ex, i) => (\
+                <li key=\{i\} className="flex items-start">\
+                  <span className="text-blue-500 mr-2 mt-1">\'95</span>\
+                  <span className="text-lg text-slate-800 font-medium">\{ex\}</span>\
+                </li>\
+              ))\}\
+            </ul>\
+          </div>\
+        </div>\
+      ))\}\
+    </div>\
+  );\
+\}\
+\
+function GrammarQuiz() \{\
+  const [currentQ, setCurrentQ] = useState(0);\
+  const [score, setScore] = useState(0);\
+  const [showResult, setShowResult] = useState(false);\
+  const [selectedOpt, setSelectedOpt] = useState(null);\
+  const [isAnswered, setIsAnswered] = useState(false);\
+\
+  const handleSelect = (opt) => \{\
+    if (isAnswered) return;\
+    setSelectedOpt(opt);\
+    setIsAnswered(true);\
+    \
+    if (opt === GRAMMAR_QUIZ_DATA[currentQ].ans) \{\
+      setScore(score + 1);\
+    \}\
+\
+    setTimeout(() => \{\
+      if (currentQ < GRAMMAR_QUIZ_DATA.length - 1) \{\
+        setCurrentQ(currentQ + 1);\
+        setSelectedOpt(null);\
+        setIsAnswered(false);\
+      \} else \{\
+        setShowResult(true);\
+      \}\
+    \}, 1200);\
+  \};\
+\
+  const restart = () => \{\
+    setCurrentQ(0);\
+    setScore(0);\
+    setShowResult(false);\
+    setSelectedOpt(null);\
+    setIsAnswered(false);\
+  \};\
+\
+  if (showResult) \{\
+    return (\
+      <div className="max-w-lg mx-auto bg-white p-8 rounded-2xl shadow-lg text-center">\
+        <h3 className="text-3xl font-bold text-slate-800 mb-4">Grammatika Testi Yakunlandi!</h3>\
+        <p className="text-2xl text-blue-600 font-bold mb-8">Natija: \{score\} / \{GRAMMAR_QUIZ_DATA.length\}</p>\
+        <button onClick=\{restart\} className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-blue-700 transition">\
+          Qaytadan boshlash\
+        </button>\
+      </div>\
+    );\
+  \}\
+\
+  const q = GRAMMAR_QUIZ_DATA[currentQ];\
+\
+  return (\
+    <div className="max-w-xl mx-auto bg-white p-6 md:p-10 rounded-2xl shadow-lg">\
+      <div className="flex justify-between items-center mb-8 border-b border-slate-100 pb-4">\
+        <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">Savol \{currentQ + 1\} / \{GRAMMAR_QUIZ_DATA.length\}</span>\
+        <span className="text-sm font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Ball: \{score\}</span>\
+      </div>\
+      \
+      <div className="text-center mb-10">\
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 leading-tight">\{q.q\}</h2>\
+      </div>\
+\
+      <div className="grid grid-cols-2 gap-4">\
+        \{q.opts.map((opt, i) => \{\
+          let btnClass = "bg-slate-50 hover:bg-blue-50 hover:border-blue-300 text-slate-700 border border-slate-200";\
+          if (isAnswered) \{\
+            if (opt === q.ans) btnClass = "bg-green-100 border-green-400 text-green-800";\
+            else if (opt === selectedOpt) btnClass = "bg-red-100 border-red-400 text-red-800";\
+            else btnClass = "bg-slate-50 opacity-50 border-slate-200";\
+          \}\
+\
+          return (\
+            <button \
+              key=\{i\}\
+              onClick=\{() => handleSelect(opt)\}\
+              disabled=\{isAnswered\}\
+              className=\{`p-6 rounded-2xl font-bold text-2xl transition-all shadow-sm $\{btnClass\}`\}\
+            >\
+              \{opt\}\
+            </button>\
+          );\
+        \})\}\
+      </div>\
+    </div>\
+  );\
+\}\
+\
+function Exercises() \{\
+  const [answers, setAnswers] = useState(Array(EXERCISES_DATA.length).fill(''));\
+  const [submitted, setSubmitted] = useState(false);\
+\
+  const handleSelect = (idx, value) => \{\
+    if (submitted) return;\
+    const newAns = [...answers];\
+    newAns[idx] = value;\
+    setAnswers(newAns);\
+  \};\
+\
+  const checkAnswers = () => \{\
+    setSubmitted(true);\
+  \};\
+\
+  const reset = () => \{\
+    setAnswers(Array(EXERCISES_DATA.length).fill(''));\
+    setSubmitted(false);\
+  \};\
+\
+  const score = answers.reduce((acc, curr, idx) => curr === EXERCISES_DATA[idx].ans ? acc + 1 : acc, 0);\
+\
+  return (\
+    <div className="max-w-2xl mx-auto bg-white p-6 md:p-10 rounded-2xl shadow-lg">\
+      <div className="mb-8">\
+        <h3 className="text-2xl font-bold text-slate-800 mb-2">\uc0\u32473 \u19979 \u38754 \u30340 \u21160 \u35789 \u21152 \u19978 \u21512 \u36866 \u30340 \u23486 \u35821 </h3>\
+        <p className="text-slate-500 font-medium">Berilgan fe'llarga mos to'ldiruvchi qo'ying.</p>\
+      </div>\
+\
+      <div className="space-y-6 mb-8">\
+        \{EXERCISES_DATA.map((item, idx) => \{\
+          const isCorrect = answers[idx] === item.ans;\
+          return (\
+            <div key=\{idx\} className="flex items-center space-x-4 bg-slate-50 p-4 rounded-xl border border-slate-100">\
+              <div className="w-16 h-16 flex items-center justify-center bg-blue-100 text-blue-700 text-2xl font-bold rounded-lg shadow-inner">\
+                \{item.verb\}\
+              </div>\
+              <div className="text-slate-400 text-xl">+</div>\
+              <select \
+                value=\{answers[idx]\} \
+                onChange=\{(e) => handleSelect(idx, e.target.value)\}\
+                disabled=\{submitted\}\
+                className=\{`flex-grow p-3 text-lg font-medium rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white cursor-pointer\
+                  $\{submitted && isCorrect ? 'border-green-400 text-green-700 bg-green-50' : ''\}\
+                  $\{submitted && !isCorrect && answers[idx] !== '' ? 'border-red-400 text-red-700 bg-red-50' : 'border-slate-300'\}\
+                `\}\
+              >\
+                <option value="" disabled>-- Tanlang --</option>\
+                \{item.options.map((opt, i) => (\
+                  <option key=\{i\} value=\{opt\}>\{opt\}</option>\
+                ))\}\
+              </select>\
+              \
+              \{submitted && (\
+                <div className="w-8 flex items-center justify-center">\
+                  \{isCorrect \
+                    ? <span className="text-green-500 text-2xl font-bold">\uc0\u10003 </span> \
+                    : <span className="text-red-500 text-2xl font-bold">\uc0\u10007 </span>\
+                  \}\
+                </div>\
+              )\}\
+            </div>\
+          );\
+        \})\}\
+      </div>\
+\
+      \{submitted && (\
+        <div className="mb-6 text-center">\
+          <p className="text-2xl font-bold text-slate-800">\
+            Natija: <span className="text-blue-600">\{score\}</span> / \{EXERCISES_DATA.length\}\
+          </p>\
+        </div>\
+      )\}\
+\
+      <div className="text-center space-x-4">\
+        \{!submitted ? (\
+          <button \
+            onClick=\{checkAnswers\}\
+            disabled=\{answers.includes('')\}\
+            className=\{`px-8 py-3 rounded-xl font-bold shadow-md transition-all text-white\
+              $\{answers.includes('') ? 'bg-slate-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'\}`\}\
+          >\
+            Tekshirish\
+          </button>\
+        ) : (\
+          <button \
+            onClick=\{reset\}\
+            className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all"\
+          >\
+            Qaytadan ishlash\
+          </button>\
+        )\}\
+      </div>\
+    </div>\
+  );\
+\}}
